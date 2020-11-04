@@ -1,13 +1,21 @@
 <?php
 
 require('../app/functions.php');
-$title = 'login';
+$title = 'ログイン画面';
 include('../app/_parts/_header.php');
 
 session_save_path('/var/lib/php/session');
 session_start();
 
 $errorMessage = "";
+
+// mysqlが使用できるか
+if (!function_exists('mysqli_init') && !extension_loaded('mysqli')) {
+    echo 'mysqliありません';
+} else {
+    echo 'mysqliあります';
+}
+
 
 // ログインボタンが押された場合
 if (isset($_POST["login"])) {
@@ -21,7 +29,7 @@ if (isset($_POST["login"])) {
     if (!empty($_POST["userid"]) && !empty($_POST["password"])) {
 
         // mysqlへの接続
-        $mysqli = new mysqli('192.168.255.229', 'root', 'Mysql01!', 'mydb');
+        $mysqli = new mysqli('192.168.255.229', 'iwsk', 'Mysql02!', 'mydb');
 
         var_dump($mysqli);
 
@@ -33,7 +41,7 @@ if (isset($_POST["login"])) {
 
 
         // データベースの選択
-        $mysqli->select_db('mysql');
+        $mysqli->select_db('mydb');
 
         // 入力値のサニタイズ
         $userid = $mysqli->real_escape_string($_POST["userid"]);
@@ -79,7 +87,8 @@ if (isset($_POST["login"])) {
     <fieldset>
         <legend>ログインフォーム</legend>
         <div><?php echo $errorMessage ?></div>
-        <label for="userid">ユーザID</label><input type="text" id="userid" name="userid" value="<?php echo htmlspecialchars($_POST["userid"], ENT_QUOTES); ?>">
+        <label for="userid">ユーザID</label>
+        <input type="text" id="userid" name="userid" value="<?php echo htmlspecialchars($_POST["userid"], ENT_QUOTES); ?>">
         <br>
         <label for="password">パスワード</label><input type="password" id="password" name="password" value="">
         <br>
