@@ -107,27 +107,29 @@ if (isset($_POST['btn_submit'])) {
     $stm->bindValue(':mail', $mail, PDO::PARAM_STR);
     $stm->execute();
 
-    /*
-		* 登録ユーザと管理者へ仮登録されたメール送信
-       */
-    /*
-		$mailTo = $mail.','.$companymail;
-       $body = <<< EOM
+
+    $mailTo = $mail . ',' . $companymail;
+    $body = <<< EOM
        この度はご登録いただきありがとうございます。
-		本登録致しました。
+       本登録致しました。
 EOM;
-       mb_language('ja');
-       mb_internal_encoding('UTF-8');
+    mb_language('ja');
+    mb_internal_encoding('UTF-8');
 
-       //Fromヘッダーを作成
-       $header = 'From: ' . mb_encode_mimeheader($companyname). ' <' . $companymail. '>';
+    //Fromヘッダーを作成
+    $registation_subject = "登録完了";
 
-       if(mb_send_mail($mailTo, $registation_mail_subject, $body, $header, '-f'. $companymail)){
-           $message['success'] = "会員登録しました";
-       }else{
-           $errors['mail_error'] = "メールの送信に失敗しました。";
-		}
-*/
+    $header = 'From: iwasaki@centsys.jp' . "\r\n";
+    $header .= 'Return-Path: iwasaki@centsys.jp';
+    $from = "iwasaki@centsys.jp";
+    $pfrom   = "-f $from";
+
+    if (mb_send_mail($mailTo, $registation_subject, $body, $header, $pfrom)) {
+      $message['success'] = "会員登録しました";
+    } else {
+      $errors['mail_error'] = "メールの送信に失敗しました。";
+    }
+
     //データベース接続切断
     $stm = null;
 
