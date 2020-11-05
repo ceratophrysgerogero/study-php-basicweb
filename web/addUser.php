@@ -1,30 +1,22 @@
 <?php
 session_start();
 
-//クロスサイトリクエストフォージェリ（CSRF）対策
-$_SESSION['token'] = base64_encode(openssl_random_pseudo_bytes(32));
-$token = $_SESSION['token'];
-//クリックジャッキング対策
-header('X-FRAME-OPTIONS: SAMEORIGIN');
-
 //DB情報
-$user = 'iwsk'; //データベースユーザ名
-$password = 'Mysql02!'; //データベースパスワード
-$dbName = "mydb"; //データベース名
-$host = "192.168.255.229"; //ホスト
+$user = 'iwsk';
+$password = 'Mysql02!';
+$dbName = "mydb";
+$host = "192.168.255.229";
 
 //エラーメッセージの初期化
 $errors = array();
 
 //DB接続
 $dsn = "mysql:host={$host};dbname={$dbName};charser=utf8";
-//pdoオブジェクト生成
 $pdo = new PDO($dsn, $user, $password);
 //メリットデメリット両方あるが細かい話なのでtrue falseどちらでもよさそう
 $pdo->setAttribute(PDO::ATTR_EMULATE_PREPARES, false);
 //例外をスローする
 $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-
 
 
 //送信ボタンクリックした後の処理
@@ -61,7 +53,7 @@ if (isset($_POST['submit'])) {
   //エラーがない場合、pre_userテーブルにインサート
   if (count($errors) === 0) {
     $urltoken = hash('sha256', uniqid(rand(), 1));
-    $url = "http://localhost:8080/signup.php?urltoken=" . $urltoken;
+    $url = "http://192.168.255.229/signup.php?urltoken=" . $urltoken;
     try {
       //仮登録テーブルに挿入
       $sql = "INSERT INTO provisional_user (urltoken, mail, date, flag) VALUES (:urltoken, :mail, now(), '0')";
