@@ -113,8 +113,6 @@ EOM;
 <?php if (isset($_POST['submit']) && count($errors) === 0) : ?>
   <!-- 登録完了画面 -->
   <p><?= $message ?></p>
-  <p>↓TEST用(後ほど削除)：このURLが記載されたメールが届きます。</p>
-  <a href="<?= $url ?>"><?= $url ?></a>
 <?php else : ?>
   <!-- 登録画面 -->
   <?php if (count($errors) > 0) : ?>
