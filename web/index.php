@@ -9,14 +9,6 @@ session_start();
 
 $errorMessage = "";
 
-// mysqlが使用できるか
-if (!function_exists('mysqli_init') && !extension_loaded('mysqli')) {
-    echo 'mysqliありません';
-} else {
-    echo 'mysqliあります';
-}
-
-
 // ログインボタンが押された場合
 if (isset($_POST["login"])) {
     // １．ユーザIDの入力チェック
