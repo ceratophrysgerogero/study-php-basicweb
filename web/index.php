@@ -1,13 +1,19 @@
 <?php
-
-require('../app/functions.php');
 $title = 'ログイン画面';
 include('../app/_parts/_header.php');
 
 session_save_path('/var/lib/php/session');
 session_start();
 
-$errorMessage = "";
+
+//成功・エラーメッセージの初期化
+$errors = array();
+
+//DB情報
+$user = 'iwsk';
+$password = 'Mysql02!';
+$dbName = "mydb";
+$host = "192.168.255.229";
 
 // ログインボタンが押された場合
 if (isset($_POST["login"])) {
@@ -20,55 +26,55 @@ if (isset($_POST["login"])) {
     // ２．ユーザIDとパスワードが入力されていたら認証する
     if (!empty($_POST["userid"]) && !empty($_POST["password"])) {
 
-        // mysqlへの接続
-        $mysqli = new mysqli('192.168.255.229', 'iwsk', 'Mysql02!', 'mydb');
-
-        var_dump($mysqli);
 
 
-        if ($mysqli->connect_errno) {
-            print('<p>データベースへの接続に失敗しました。</p>' . $mysqli->connect_error);
-            exit();
+        //DB接続
+        $dsn = "mysql:host={$host};dbname={$dbName};charser=utf8";
+        $pdo = new PDO($dsn, $user, $password);
+
+
+
+        //pdoの設定
+        //メリットデメリット両方あるが細かい話なのでtrue falseどちらでもよさそう
+        $pdo->setAttribute(PDO::ATTR_EMULATE_PREPARES, false);
+        //例外をスローする
+        $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+
+        //sql文セット
+        $sql = "SELECT * FROM user WHERE mail = :userid";
+        $stm = $pdo->prepare($sql);
+        $userid = isset($_POST['userid']) ? $_POST['userid'] : NULL;
+        $stm->bindValue(':userid', $userid, PDO::PARAM_STR);
+
+        //クエリ実行
+        $stm->execute();
+        $result = $stm->fetch(PDO::FETCH_ASSOC);
+
+        if (!$stm) {
+            $errorMessage = "IDあるいはパスワードに誤りがあります。";
+            // データベースの切断
+            $stm  = null;
+            $pdo = null;
+            exit;
         }
 
-
-        // データベースの選択
-        $mysqli->select_db('mydb');
-
-        // 入力値のサニタイズ
-        $userid = $mysqli->real_escape_string($_POST["userid"]);
-
-        // クエリの実行
-        $query = "SELECT * FROM user WHERE name = '" . $userid . "'";
-        $result = $mysqli->query($query);
-        if (!$result) {
-            print('クエリーが失敗しました。' . $mysqli->error);
-            $mysqli->close();
-            exit();
-        }
-
-        while ($row = $result->fetch_assoc()) {
-            // パスワード(暗号化済み）の取り出し
-            $db_hashed_pwd = $row['password'];
-        }
+        // パスワード(暗号化済み）の取り出し
+        $db_hashed_pwd = $result['password'];
 
         // データベースの切断
-        $mysqli->close();
+        $stm  = null;
+        $pdo = null;
 
-        // ３．画面から入力されたパスワードとデータベースから取得したパスワードのハッシュを比較します。
-        //if ($_POST["password"] == $pw) {
+        //パスワードとデータベースから取得したパスワードのハッシュを比較
         if (password_verify($_POST["password"], $db_hashed_pwd)) {
-            // ４．認証成功なら、セッションIDを新規に発行する
+            // セッションIDを新規に発行する
             session_regenerate_id(true);
             $_SESSION["USERID"] = $_POST["userid"];
             header("Location: main.php");
             exit;
         } else {
-            // 認証失敗
             $errorMessage = "ユーザIDあるいはパスワードに誤りがあります。";
         }
-    } else {
-        // 未入力なら何もしない
     }
 }
 
