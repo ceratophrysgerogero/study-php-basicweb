@@ -1,5 +1,5 @@
 <?php
-$title = 'ログイン画面';
+$title = 'ログイン';
 include('../app/_parts/_header.php');
 
 session_save_path('/var/lib/php/session');
@@ -64,7 +64,7 @@ if (isset($_POST["login"])) {
             // セッションIDを新規に発行する
             session_regenerate_id(true);
             $_SESSION["userid"] = $_POST["userid"];
-            header("Location: main.php");
+            header("Location: mypage.php");
             exit;
         } else {
             $errorMessage = "ユーザIDあるいはパスワードに誤りがあります。";

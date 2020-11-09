@@ -1,5 +1,7 @@
 <?php
 session_start();
+$title = '本登録';
+include('../app/_parts/_header.php');
 
 //成功・エラーメッセージの初期化
 $errors = array();
@@ -133,7 +135,7 @@ EOM;
     //データベース接続切断
     $stm = null;
     $_SESSION["userid"] = $_SESSION['mail'];
-    header("Location: main.php");
+    header("Location: mypage.php");
   } catch (PDOException $e) {
     //トランザクション取り消し（ロールバック）
     $pdo->rollBack();

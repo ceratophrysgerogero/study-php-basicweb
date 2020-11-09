@@ -1,11 +1,13 @@
 <?php
+$title = 'ログアウト';
+include('../app/_parts/_header.php');
 session_start();
 $output = '';
 if (isset($_SESSION["userid"])) {
-  $output = 'Logoutしました。';
+  $output = 'ログアウトしました。';
 } else {
   // 1440秒
-  $output = 'SessionがTimeoutしました。';
+  $output = 'セッションがタイムアウトです。';
 }
 //セッション変数のクリア
 $_SESSION = array();

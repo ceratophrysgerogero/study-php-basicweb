@@ -1,6 +1,9 @@
 <?php
 session_start();
 
+$title = '仮会員登録';
+include('../app/_parts/_header.php');
+
 //DB情報
 $user = 'iwsk';
 $password = 'Mysql02!';
