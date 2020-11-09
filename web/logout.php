@@ -32,3 +32,7 @@ echo $output;
 
 <meta http-equiv="refresh" content=" 3; url=index.php">
 <p>3秒後にログイン画面に遷移します。</p>
+
+<?php
+include('../app/_parts/_footer.php');
+?>

@@ -15,3 +15,20 @@ if (!isset($_SESSION["userid"])) {
 <ul>
   <li><a href="mypage.php">マイページ</a></li>
 </ul>
+
+
+//ページネーションを表示
+<?php
+for ($n = 1; $n <= $pages; $n++) {
+  if ($n == $now) {
+    echo "<span style='padding: 5px;'>$now</span>";
+  } else {
+    echo "<a href='./home.php?page_id=$n' style='padding: 5px;'>$n</a>";
+  }
+}
+?>
+
+
+<?php
+include('../app/_parts/_footer.php');
+?>

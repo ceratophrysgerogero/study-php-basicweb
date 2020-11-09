@@ -133,3 +133,7 @@ EOM;
     <input type="submit" name="submit" value="送信">
   </form>
 <?php endif; ?>
+
+<?php
+include('../app/_parts/_footer.php');
+?>

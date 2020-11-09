@@ -18,3 +18,7 @@ if (!isset($_SESSION["userid"])) {
   <li><a href="users.php">ユーザー一覧</a></li>
   <li><a href="logout.php">ログアウト</a></li>
 </ul>
+
+<?php
+include('../app/_parts/_footer.php');
+?>

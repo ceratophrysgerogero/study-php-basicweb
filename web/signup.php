@@ -192,3 +192,7 @@ EOM;
     </form>
   <?php endif ?>
 <?php endif; ?>
+
+<?php
+include('../app/_parts/_footer.php');
+?>
