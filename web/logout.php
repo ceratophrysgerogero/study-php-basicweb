@@ -1,7 +1,7 @@
 <?php
 session_start();
 $output = '';
-if (isset($_SESSION["USERID"])) {
+if (isset($_SESSION["userid"])) {
   $output = 'Logoutしました。';
 } else {
   // 1440秒

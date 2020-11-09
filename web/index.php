@@ -74,6 +74,8 @@ if (isset($_POST["login"])) {
             exit;
         } else {
             $errorMessage = "ユーザIDあるいはパスワードに誤りがあります。";
+            header("Location: index.php");
+            exit;
         }
     }
 }
