@@ -7,7 +7,7 @@ session_start();
 
 
 //成功・エラーメッセージの初期化
-$errors = array();
+$errorMessage =  "";
 
 //DB情報
 $user = 'iwsk';
@@ -23,16 +23,12 @@ if (isset($_POST["login"])) {
     } else if (empty($_POST["password"])) {
         $errorMessage = "パスワードが未入力です。";
     }
+
     // ２．ユーザIDとパスワードが入力されていたら認証する
     if (!empty($_POST["userid"]) && !empty($_POST["password"])) {
-
-
-
         //DB接続
         $dsn = "mysql:host={$host};dbname={$dbName};charser=utf8";
         $pdo = new PDO($dsn, $user, $password);
-
-
 
         //pdoの設定
         //メリットデメリット両方あるが細かい話なのでtrue falseどちらでもよさそう
@@ -45,17 +41,15 @@ if (isset($_POST["login"])) {
         $stm = $pdo->prepare($sql);
         $userid = isset($_POST['userid']) ? $_POST['userid'] : NULL;
         $stm->bindValue(':userid', $userid, PDO::PARAM_STR);
-
         //クエリ実行
         $stm->execute();
         $result = $stm->fetch(PDO::FETCH_ASSOC);
 
-        if (!$stm) {
+        if (empty($result)) {
             $errorMessage = "IDあるいはパスワードに誤りがあります。";
             // データベースの切断
             $stm  = null;
             $pdo = null;
-            exit;
         }
 
         // パスワード(暗号化済み）の取り出し
@@ -69,13 +63,11 @@ if (isset($_POST["login"])) {
         if (password_verify($_POST["password"], $db_hashed_pwd)) {
             // セッションIDを新規に発行する
             session_regenerate_id(true);
-            $_SESSION["USERID"] = $_POST["userid"];
+            $_SESSION["userid"] = $_POST["userid"];
             header("Location: main.php");
             exit;
         } else {
             $errorMessage = "ユーザIDあるいはパスワードに誤りがあります。";
-            header("Location: index.php");
-            exit;
         }
     }
 }
