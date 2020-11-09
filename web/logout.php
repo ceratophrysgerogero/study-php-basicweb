@@ -26,3 +26,7 @@ if (ini_get("session.use_cookies")) {
 @session_destroy();
 
 echo $output;
+?>
+
+<meta http-equiv="refresh" content=" 3; url=index.php">
+<p>3秒後にログイン画面に遷移します。</p>
