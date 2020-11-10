@@ -4,14 +4,15 @@ $title = 'マイページ';
 include('../app/_parts/_header.php');
 
 include('../app/_function/functions.php');
-//クロスサイトリクエストフォージェリ（CSRF）対策
-$_SESSION['token'] = CsrfValidator::generate();
+//csrf検出
+CsrfValidator::validate($token);
 
-// ログイン状態のチェック
-if (!isset($_SESSION["userid"])) {
-  header("Location: logout.php");
-  exit;
-}
+//セッショントークン生成
+$_SESSION['token'] = CsrfValidator::generate();
+$token = $_SESSION['token'];
+
+//ログインチェック
+CsrfValidator::loginCheck();
 
 ?>
 

@@ -14,8 +14,10 @@ if (!isset($_SESSION["userid"])) {
 //csrf検出
 CsrfValidator::validate($token);
 
+
 //クロスサイトリクエストフォージェリ（CSRF）対策
 $_SESSION['token'] = CsrfValidator::generate();
+$token = $_SESSION['token'];
 
 //成功・エラーメッセージの初期化
 $errorMessage =  "";
@@ -80,14 +82,10 @@ $data = $select->fetchAll(PDO::FETCH_ASSOC);
 ?>
 
 <h1>ユーザー一覧</h1>
-
-<ul>
-  <li><a href="mypage.php">マイページ</a></li>
-</ul>
-
+<a href="mypage.php">マイページ</a>
 <ul>
   <?php
-
+  // ユーザー一覧表示
   foreach ($data as $row) {
     echo "<li>'$row[name]'</a></li>";
   }

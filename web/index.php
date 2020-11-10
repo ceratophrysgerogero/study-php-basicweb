@@ -5,7 +5,8 @@ include('../app/_parts/_header.php');
 session_save_path('/var/lib/php/session');
 
 include('../app/_function/functions.php');
-//クロスサイトリクエストフォージェリ（CSRF）対策
+
+//セッショントークン生成
 $_SESSION['token'] = CsrfValidator::generate();
 $token = $_SESSION['token'];
 

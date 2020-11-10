@@ -27,4 +27,13 @@ class CsrfValidator
     }
     return $success;
   }
+
+  public static function loginCheck()
+  {
+    // ログイン状態のチェック
+    if (!isset($_SESSION["userid"])) {
+      header("Location: logout.php");
+      exit;
+    }
+  }
 }
