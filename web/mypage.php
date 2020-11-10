@@ -3,6 +3,10 @@ session_start();
 $title = 'マイページ';
 include('../app/_parts/_header.php');
 
+include('../app/_function/functions.php');
+//クロスサイトリクエストフォージェリ（CSRF）対策
+$_SESSION['token'] = CsrfValidator::generate();
+
 // ログイン状態のチェック
 if (!isset($_SESSION["userid"])) {
   header("Location: logout.php");
