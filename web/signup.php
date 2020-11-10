@@ -1,5 +1,12 @@
 <?php
+include('../app/_function/functions.php');
+//クロスサイトリクエストフォージェリ（CSRF）対策
+$_SESSION['token'] = CsrfValidator::generate();
+$token = $_SESSION['token'];
+
 session_start();
+$title = '本登録';
+include('../app/_parts/_header.php');
 
 //成功・エラーメッセージの初期化
 $errors = array();
@@ -88,6 +95,9 @@ if (isset($_POST['btn_confirm'])) {
  */
 if (isset($_POST['btn_submit'])) {
 
+  //csrf検出
+  CsrfValidator::validate($token);
+
   //パスワードのハッシュ化
   $password_hash =  password_hash($_SESSION['password'], PASSWORD_DEFAULT);
 
@@ -132,20 +142,14 @@ EOM;
 
     //データベース接続切断
     $stm = null;
-
-    //セッション変数を全て解除
-    $_SESSION = array();
-    //セッションクッキーの削除
-    if (isset($_COOKIE["PHPSESSID"])) {
-      setcookie("PHPSESSID", '', time() - 1800, '/');
-    }
-    //セッションを破棄する
-    session_destroy();
+    $_SESSION["userid"] = $_SESSION['mail'];
+    header("Location: mypage.php");
   } catch (PDOException $e) {
     //トランザクション取り消し（ロールバック）
     $pdo->rollBack();
     $errors['error'] = "もう一度やりなおして下さい。";
     print('Error:' . $e->getMessage());
+    //TODO 数秒後に遷移する機能を追加する
   }
 }
 
@@ -196,3 +200,7 @@ EOM;
     </form>
   <?php endif ?>
 <?php endif; ?>
+
+<?php
+include('../app/_parts/_footer.php');
+?>

@@ -1,11 +1,13 @@
 <?php
+$title = 'ログアウト';
+include('../app/_parts/_header.php');
 session_start();
 $output = '';
-if (isset($_SESSION["USERID"])) {
-  $output = 'Logoutしました。';
+if (isset($_SESSION["userid"])) {
+  $output = 'ログアウトしました。';
 } else {
   // 1440秒
-  $output = 'SessionがTimeoutしました。';
+  $output = 'セッションがタイムアウトです。';
 }
 //セッション変数のクリア
 $_SESSION = array();
@@ -26,3 +28,11 @@ if (ini_get("session.use_cookies")) {
 @session_destroy();
 
 echo $output;
+?>
+
+<meta http-equiv="refresh" content=" 3; url=index.php">
+<p>3秒後にログイン画面に遷移します。</p>
+
+<?php
+include('../app/_parts/_footer.php');
+?>
