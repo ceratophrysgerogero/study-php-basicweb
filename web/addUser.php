@@ -127,8 +127,9 @@ EOM;
     ?>
   <?php endif; ?>
   <form action="<?php echo $_SERVER['SCRIPT_NAME'] ?>" method="post">
-    <p>メールアドレス：<input type="text" name="mail" size="50" value="
-    <?php if (!empty($_POST['mail'])) {echo htmlspecialchars($_POST['mail']);} ?>"></p>
+    <p>メールアドレス：<input type="text" name="mail" size="50" value="<?php if (!empty($_POST['mail'])) {
+                                                                  echo htmlspecialchars($_POST['mail']);
+                                                                } ?>"></p>
     <input type="hidden" name="token" value="<?= $token ?>">
     <!-- token作成してセッションに登録 -->
     <input type="submit" name="submit" value="送信">
