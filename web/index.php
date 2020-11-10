@@ -1,14 +1,10 @@
 <?php
 $title = 'ログイン';
+session_name();
 session_start();
 include('../app/_parts/_header.php');
-session_save_path('/var/lib/php/session');
 
-include('../app/_function/functions.php');
 
-//セッショントークン生成
-$_SESSION['token'] = CsrfValidator::generate();
-$token = $_SESSION['token'];
 
 //成功・エラーメッセージの初期化
 $errorMessage =  "";

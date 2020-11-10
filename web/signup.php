@@ -1,5 +1,4 @@
 <?php
-include('../app/_function/functions.php');
 //クロスサイトリクエストフォージェリ（CSRF）対策
 $_SESSION['token'] = CsrfValidator::generate();
 $token = $_SESSION['token'];

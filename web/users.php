@@ -1,15 +1,11 @@
 <?php
 
-include('../app/_function/functions.php');
-
 session_start();
 $title = 'ユーザー一覧';
 include('../app/_parts/_header.php');
-// ログイン状態のチェック
-if (!isset($_SESSION["userid"])) {
-  header("Location: logout.php");
-  exit;
-}
+
+//ログインチェック
+CsrfValidator::loginCheck();
 
 //csrf検出
 CsrfValidator::validate($token);
@@ -82,12 +78,11 @@ $data = $select->fetchAll(PDO::FETCH_ASSOC);
 ?>
 
 <h1>ユーザー一覧</h1>
-<a href="mypage.php">マイページ</a>
 <ul>
   <?php
   // ユーザー一覧表示
   foreach ($data as $row) {
-    echo "<li>'$row[name]'</a></li>";
+    echo "<li>$row[name]</a></li>";
   }
   ?>
 </ul>
