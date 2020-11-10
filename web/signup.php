@@ -1,4 +1,9 @@
 <?php
+include('../app/_function/functions.php');
+//クロスサイトリクエストフォージェリ（CSRF）対策
+$_SESSION['token'] = CsrfValidator::generate();
+$token = $_SESSION['token'];
+
 session_start();
 $title = '本登録';
 include('../app/_parts/_header.php');
@@ -89,6 +94,9 @@ if (isset($_POST['btn_confirm'])) {
  * 登録(btn_submit)押した後の処理
  */
 if (isset($_POST['btn_submit'])) {
+
+  //csrf検出
+  CsrfValidator::validate($token);
 
   //パスワードのハッシュ化
   $password_hash =  password_hash($_SESSION['password'], PASSWORD_DEFAULT);

@@ -1,10 +1,13 @@
 <?php
 $title = 'ログイン';
-include('../app/_parts/_header.php');
-
-session_save_path('/var/lib/php/session');
 session_start();
+include('../app/_parts/_header.php');
+session_save_path('/var/lib/php/session');
 
+include('../app/_function/functions.php');
+//クロスサイトリクエストフォージェリ（CSRF）対策
+$_SESSION['token'] = CsrfValidator::generate();
+$token = $_SESSION['token'];
 
 //成功・エラーメッセージの初期化
 $errorMessage =  "";
@@ -17,6 +20,10 @@ $host = "192.168.255.229";
 
 // ログインボタンが押された場合
 if (isset($_POST["login"])) {
+
+    //csrf検出
+    CsrfValidator::validate($token);
+
     // １．ユーザIDの入力チェック
     if (empty($_POST["userid"])) {
         $errorMessage = "ユーザIDが未入力です。";
@@ -26,10 +33,14 @@ if (isset($_POST["login"])) {
 
     // ２．ユーザIDとパスワードが入力されていたら認証する
     if (!empty($_POST["userid"]) && !empty($_POST["password"])) {
-        //DB接続
-        $dsn = "mysql:host={$host};dbname={$dbName};charser=utf8";
-        $pdo = new PDO($dsn, $user, $password);
-
+        try {
+            //DB接続
+            $dsn = "mysql:host={$host};dbname={$dbName};charser=utf8";
+            $pdo = new PDO($dsn, $user, $password);
+        } catch (PDOException $error) {
+            //エラーの場合はエラーメッセージを吐き出す
+            exit("データベースに接続できませんでした。<br>" . $error->getMessage());
+        }
         //pdoの設定
         //メリットデメリット両方あるが細かい話なのでtrue falseどちらでもよさそう
         $pdo->setAttribute(PDO::ATTR_EMULATE_PREPARES, false);
@@ -84,6 +95,7 @@ if (isset($_POST["login"])) {
         <br>
         <label for="password">パスワード</label><input type="password" id="password" name="password" value="">
         <br>
+        <input type="hidden" name="token" value="<?= $token ?>">
         <input type="submit" id="login" name="login" value="ログイン">
     </fieldset>
 </form>
