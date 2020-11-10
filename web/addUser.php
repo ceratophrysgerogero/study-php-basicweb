@@ -47,9 +47,10 @@ if (isset($_POST['submit'])) {
     //結果を格納(入力されたメールが登録されていなかったら空になる)
     $result = $stm->fetch(PDO::FETCH_ASSOC);
 
-    //user テーブルに同じメールアドレスがある場合、エラー表示
+    //user テーブルに同じメールアドレスがある場合、エラー
     if (isset($result["id"])) {
-      $errors['user_check'] = "このメールアドレスはすでに利用されております。";
+      //メールアドレスがあるかどうかを特定されないようなコメント　
+      $errors['user_check'] = "メールをお送りしました。24時間以内にメールに記載されたURLからご登録下さい。";
     }
   }
 
@@ -126,14 +127,13 @@ EOM;
     ?>
   <?php endif; ?>
   <form action="<?php echo $_SERVER['SCRIPT_NAME'] ?>" method="post">
-    <p>メールアドレス：<input type="text" name="mail" size="50" value="<?php if (!empty($_POST['mail'])) {
-                                                                  echo $_POST['mail'];
-                                                                } ?>"></p>
+    <p>メールアドレス：<input type="text" name="mail" size="50" value="
+    <?php if (!empty($_POST['mail'])) {echo htmlspecialchars($_POST['mail']);} ?>"></p>
     <input type="hidden" name="token" value="<?= $token ?>">
+    <!-- token作成してセッションに登録 -->
     <input type="submit" name="submit" value="送信">
-  </form>
-<?php endif; ?>
+  <?php endif; ?>
 
-<?php
-include('../app/_parts/_footer.php');
-?>
+  <?php
+  include('../app/_parts/_footer.php');
+  ?>
