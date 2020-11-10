@@ -1,4 +1,7 @@
 <?php
+//csrf対策はpostしてDBに登録するときとログイン後すべてに行う
+//ワンタイムで一回使ったら破棄していい
+//毎回生成するなら破棄の記述はいらない(上書きされるから)
 class CsrfValidator
 {
 
@@ -19,11 +22,8 @@ class CsrfValidator
     $success = self::generate() === $token;
     if ($success) {
       echo 'CSRFトークンが一致しません。';
-      if (!$_SERVER['REQUEST_URI'] === $_SERVER['REQUEST_URI']) {
-        echo '3秒後にログイン画面に遷移します。';
-        //遷移させるだけでいいのか？？
-        echo '<meta http-equiv="refresh" content=" 3; url=index.php">';
-      }
+      header("Location: index.php");
+      exit;
     }
     return $success;
   }
