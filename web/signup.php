@@ -7,6 +7,12 @@ session_start();
 $title = '本登録';
 include('../app/_parts/_header.php');
 
+//ログアウトしてないと遷移できない
+if (isset($_SESSION["userid"])) {
+  header("Location: mypage.php");
+  exit;
+}
+
 //成功・エラーメッセージの初期化
 $errors = array();
 
