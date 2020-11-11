@@ -42,6 +42,15 @@ define('max_view', 7);
 
 //必要なページ数を求める カラム名をcountに変更する
 $count = $pdo->prepare('SELECT COUNT(*) AS count FROM user WHERE status=1');
+
+//ユーザー検索の場合
+if (isset($_GET['search_input'])) {
+  $count = $pdo->prepare("SELECT COUNT(*) AS count FROM user WHERE status=1 And name LIKE :name");
+  $name = "%" . $_GET['search_input'] . "%";
+  //プレスホルダーでエスケープ処理する
+  $count->bindValue(":name", $name, PDO::PARAM_INT);
+}
+
 $count->execute();
 $total_count = $count->fetch(PDO::FETCH_ASSOC);
 //表示するページを計算
@@ -61,6 +70,16 @@ if (!isset($_GET['page_id'])) {
 //表示する記事を取得するSQLを準備
 //名前順でソートして登録されている名前を受け取る
 $select = $pdo->prepare("SELECT name FROM user WHERE status=1 ORDER BY name ASC LIMIT :start,:max");
+
+//ユーザー検索の場合
+if (isset($_GET['search_input'])) {
+  $select = $pdo->prepare("SELECT name FROM user WHERE status=1 And name LIKE :name ORDER BY name ASC LIMIT :start,:max");
+  $name = "%" . $_GET['search_input'] . "%";
+  //プレスホルダーでエスケープ処理する
+  $select->bindValue(":name", $name, PDO::PARAM_INT);
+}
+
+
 if ($now == 1) {
   //1ページ目の処理
   $select->bindValue(":start", $now - 1, PDO::PARAM_INT);
@@ -78,6 +97,13 @@ $data = $select->fetchAll(PDO::FETCH_ASSOC);
 ?>
 
 <h1>ユーザー一覧</h1>
+<form method="get" action="" class="search_user">
+  <input type="text" name="search_input" placeholder="ユーザー検索" value="<?php if (!empty($_GET['search_input'])) {
+                                                                        echo htmlspecialchars($_GET['search_input']);
+                                                                      } ?>">
+  <input type="submit">
+</form>
+
 <ul>
   <?php
   // ユーザー一覧表示
@@ -94,8 +120,14 @@ for ($n = 1; $n <= $pages; $n++) {
   if ($n == $now) {
     echo "<span style='padding: 5px;'>$now</span>";
   } else {
-    //getパラメーターを使って押されたページ数に遷移させる
-    echo "<a href='./users.php?page_id=$n' style='padding: 5px;'>$n</a>";
+    if (isset($_GET['search_input'])) {
+      //ユーザー検索の場合
+      $search_input = $_GET['search_input'];
+      echo "<a href='./users.php?page_id=$n&search_input=$search_input' style='padding: 5px;'>$n</a>";
+    } else {
+      //getパラメーターを使って押されたページ数に遷移させる
+      echo "<a href='./users.php?page_id=$n' style='padding: 5px;'>$n</a>";
+    }
   }
 }
 ?>
