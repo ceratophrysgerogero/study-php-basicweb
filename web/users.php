@@ -121,6 +121,7 @@ for ($n = 1; $n <= $pages; $n++) {
     echo "<span style='padding: 5px;'>$now</span>";
   } else {
     if (isset($_GET['search_input'])) {
+      //ユーザー検索の場合
       $search_input = $_GET['search_input'];
       echo "<a href='./users.php?page_id=$n&search_input=$search_input' style='padding: 5px;'>$n</a>";
     } else {
