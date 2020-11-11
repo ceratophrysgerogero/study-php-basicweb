@@ -4,6 +4,12 @@ session_start();
 $title = '仮会員登録';
 include('../app/_parts/_header.php');
 
+//ログアウトしてないと遷移できない
+if (isset($_SESSION["userid"])) {
+  header("Location: mypage.php");
+  exit;
+}
+
 //DB情報
 $user = 'iwsk';
 $password = 'Mysql02!';
