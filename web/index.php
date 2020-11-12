@@ -5,7 +5,7 @@ session_start();
 include('../app/_parts/_header.php');
 
 //ログアウトしてないと遷移できない
-if (isset($_SESSION["userid"])) {
+if (isset($_SESSION["user_mail"])) {
     header("Location: mypage.php");
     exit;
 }
@@ -75,7 +75,7 @@ if (isset($_POST["login"])) {
         if (password_verify($_POST["password"], $db_hashed_pwd)) {
             // セッションIDを新規に発行する
             session_regenerate_id(true);
-            $_SESSION["userid"] = $_POST["userid"];
+            $_SESSION["user_mail"] = $_POST["userid"];
             header("Location: mypage.php");
             exit;
         } else {

@@ -3,7 +3,7 @@ $title = 'ログアウト';
 include('../app/_parts/_header.php');
 session_start();
 $output = '';
-if (isset($_SESSION["userid"])) {
+if (isset($_SESSION["user_mail"])) {
   $output = 'ログアウトしました。';
 } else {
   // 1440秒

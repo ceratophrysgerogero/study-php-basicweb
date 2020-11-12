@@ -5,7 +5,7 @@ $title = '仮会員登録';
 include('../app/_parts/_header.php');
 
 //ログアウトしてないと遷移できない
-if (isset($_SESSION["userid"])) {
+if (isset($_SESSION["user_mail"])) {
   header("Location: mypage.php");
   exit;
 }

@@ -17,7 +17,7 @@ CsrfValidator::loginCheck();
 
 <h1>マイページ</h1>
 <!-- ユーザIDにHTMLタグが含まれても良いようにエスケープする -->
-<p>ようこそ<?= htmlspecialchars($_SESSION["userid"], ENT_QUOTES); ?>さん</p>
+<p>ようこそ<?= htmlspecialchars($_SESSION["user_mail"], ENT_QUOTES); ?>さん</p>
 
 
 <?php

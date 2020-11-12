@@ -1,14 +1,14 @@
 <?php
+include('../app/_parts/_header.php');
 //クロスサイトリクエストフォージェリ（CSRF）対策
 $_SESSION['token'] = CsrfValidator::generate();
 $token = $_SESSION['token'];
 
 session_start();
 $title = '本登録';
-include('../app/_parts/_header.php');
 
 //ログアウトしてないと遷移できない
-if (isset($_SESSION["userid"])) {
+if (isset($_SESSION["user_mail"])) {
   header("Location: mypage.php");
   exit;
 }
@@ -55,7 +55,7 @@ if (empty($_GET)) {
         $mail_array = $stm->fetch();
         //mailカラムを取り出す
         $mail = $mail_array["mail"];
-        $_SESSION['mail'] = $mail;
+        $_SESSION['user_mail'] = $mail;
       } else {
         $errors['urltoken_timeover'] = "このURLはご利用できません。有効期限が過ぎたかURLが間違えている可能性がございます。もう一度登録をやりなおして下さい。";
       }
@@ -78,7 +78,7 @@ if (isset($_POST['btn_confirm'])) {
   $password = isset($_POST['password']) ? $_POST['password'] : NULL;
 
   //セッションに登録
-  $_SESSION['name'] = $name;
+  $_SESSION['user_name'] = $name;
   $_SESSION['password'] = $password;
 
   //アカウント入力判定
@@ -110,8 +110,8 @@ if (isset($_POST['btn_submit'])) {
   try {
     $sql = "INSERT INTO user (name,password,mail,status,created_at,updated_at) VALUES (:name,:password_hash,:mail,1,now(),now())";
     $stm = $pdo->prepare($sql);
-    $stm->bindValue(':name', $_SESSION['name'], PDO::PARAM_STR);
-    $stm->bindValue(':mail', $_SESSION['mail'], PDO::PARAM_STR);
+    $stm->bindValue(':name',  $_SESSION['user_name'], PDO::PARAM_STR);
+    $stm->bindValue(':mail', $_SESSION['user_mail'], PDO::PARAM_STR);
     $stm->bindValue(':password_hash', $password_hash, PDO::PARAM_STR);
     $stm->execute();
 
@@ -147,7 +147,7 @@ EOM;
 
     //データベース接続切断
     $stm = null;
-    $_SESSION["userid"] = $_SESSION['mail'];
+    $_SESSION["user_mail"] = $_SESSION['user_mail'];
     header("Location: mypage.php");
   } catch (PDOException $e) {
     //トランザクション取り消し（ロールバック）
@@ -169,7 +169,7 @@ EOM;
   <!-- page_2 確認画面-->
 <?php elseif (isset($_POST['btn_confirm']) && count($errors) === 0) : ?>
   <form action="<?php echo $_SERVER['SCRIPT_NAME'] ?>?urltoken=<?php print $urltoken; ?>" method="post">
-    <p>メールアドレス：<?= htmlspecialchars($_SESSION['mail'], ENT_QUOTES) ?></p>
+    <p>メールアドレス：<?= htmlspecialchars($_SESSION['user_mail'], ENT_QUOTES) ?></p>
     <p>パスワード：<?= $password_hide ?></p>
     <p>氏名：<?= htmlspecialchars($name, ENT_QUOTES) ?></p>
 
@@ -196,8 +196,8 @@ EOM;
       <p>メールアドレス：<?= htmlspecialchars($mail, ENT_QUOTES, 'UTF-8') ?></p>
       <p>パスワード：<input type="password" name="password"></p>
       <!-- 入力値を画面が離れるまで保持 -->
-      <p>氏名：<input type="text" name="name" value="<?php if (!empty($_SESSION['name'])) {
-                                                    echo $_SESSION['name'];
+      <p>氏名：<input type="text" name="name" value="<?php if (!empty($_SESSION['user_name'])) {
+                                                    echo  $_SESSION['user_name'];
                                                   } ?>"></p>
       <!-- 隠しフォームでトークンを入れる -->
       <input type="hidden" name="token" value="<?= $token ?>">
