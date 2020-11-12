@@ -69,11 +69,11 @@ if (!isset($_GET['page_id'])) {
 
 //表示する記事を取得するSQLを準備
 //名前順でソートして登録されている名前を受け取る
-$select = $pdo->prepare("SELECT name FROM user WHERE status=1 ORDER BY name ASC LIMIT :start,:max");
+$select = $pdo->prepare("SELECT id,name FROM user WHERE status=1 ORDER BY name ASC LIMIT :start,:max");
 
 //ユーザー検索の場合
 if (isset($_GET['search_input'])) {
-  $select = $pdo->prepare("SELECT name FROM user WHERE status=1 And name LIKE :name ORDER BY name ASC LIMIT :start,:max");
+  $select = $pdo->prepare("SELECT id,name FROM user WHERE status=1 And name LIKE :name ORDER BY name ASC LIMIT :start,:max");
   $name = "%" . $_GET['search_input'] . "%";
   //プレスホルダーでエスケープ処理する
   $select->bindValue(":name", $name, PDO::PARAM_INT);
@@ -108,7 +108,7 @@ $data = $select->fetchAll(PDO::FETCH_ASSOC);
   <?php
   // ユーザー一覧表示
   foreach ($data as $row) {
-    echo "<li>$row[name]</a></li>";
+    echo "<li><a href='./userpage.php?page_id=$row[id]' style='padding: 5px;'>$row[name]</a></li>";
   }
   ?>
 </ul>
