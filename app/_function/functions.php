@@ -31,7 +31,7 @@ class CsrfValidator
   public static function loginCheck()
   {
     // ログイン状態のチェック
-    if (!isset($_SESSION["userid"])) {
+    if (!isset($_SESSION["user_mail"])) {
       header("Location: logout.php");
       exit;
     }
