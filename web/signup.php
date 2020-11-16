@@ -1,10 +1,10 @@
 <?php
 include('../app/_parts/_header.php');
+session_start();
 //クロスサイトリクエストフォージェリ（CSRF）対策
 $_SESSION['token'] = CsrfValidator::generate();
 $token = $_SESSION['token'];
 
-session_start();
 $title = '本登録';
 
 //ログアウトしてないと遷移できない
