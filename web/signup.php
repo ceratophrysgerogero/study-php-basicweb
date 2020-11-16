@@ -111,6 +111,8 @@ if (isset($_POST['btn_submit'])) {
   try {
     $sql = "INSERT INTO user (name,password,mail,status,created_at,updated_at) VALUES (:name,:password_hash,:mail,1,now(),now())";
     $stm = $pdo->prepare($sql);
+    //mailのセッション名前変更
+    unset($_SESSION['mail']);
     $_SESSION['user_mail'] = $mail;
     $stm->bindValue(':name',  $_SESSION['user_name'], PDO::PARAM_STR);
     $stm->bindValue(':mail', $_SESSION['user_mail'], PDO::PARAM_STR);
