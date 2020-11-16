@@ -15,9 +15,11 @@ session_save_path('/var/lib/php/session');
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><?= htmlspecialchars($title, ENT_QUOTES, "UTF-8"); ?></title>
     <?php
+
+    $pageid = $_SESSION["user_id"];
     if (isset($_SESSION["user_mail"])) {
         echo "<div align='right'>
-        <a href='mypage.php'>マイページ</a>
+        <a href='userpage.php?page_id=$pageid'>マイページ</a>
         <a href='users.php'>ユーザー一覧</a>
         <a href='logout.php'>ログアウト</a>
         </div>";

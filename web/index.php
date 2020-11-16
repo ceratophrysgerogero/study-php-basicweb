@@ -6,7 +6,7 @@ include('../app/_parts/_header.php');
 
 //ログアウトしてないと遷移できない
 if (isset($_SESSION["user_mail"])) {
-    header("Location: mypage.php");
+    header("Location: users.php");
     exit;
 }
 
@@ -76,7 +76,9 @@ if (isset($_POST["login"])) {
             // セッションIDを新規に発行する
             session_regenerate_id(true);
             $_SESSION["user_mail"] = $_POST["userid"];
-            header("Location: mypage.php");
+            $_SESSION["user_id"] = $result['id'];
+            $pageid = $_SESSION["user_id"];
+            header("Location: userpage.php?page_id=$pageid");
             exit;
         } else {
             $errorMessage = "ユーザIDあるいはパスワードに誤りがあります。";

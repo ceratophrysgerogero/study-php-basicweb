@@ -6,7 +6,7 @@ $title = '本登録';
 
 //ログアウトしてないと遷移できない
 if (isset($_SESSION["user_mail"])) {
-  header("Location: mypage.php");
+  header("Location: users.php");
   exit;
 }
 
@@ -149,9 +149,17 @@ EOM;
       $errors['mail_error'] = "メールの送信に失敗しました。";
     }
 
+    $sql = "SELECT * FROM user where mail=:mail";
+    $stm = $pdo->prepare($sql);
+    $stm->bindValue(':mail', $_SESSION['user_mail'], PDO::PARAM_STR);
+    $stm->execute();
+    $result = $stm->fetch(PDO::FETCH_ASSOC);
+    $_SESSION["user_id"] = $result['id'];
+    $pageid = $_SESSION["user_id"];
+
     //データベース接続切断
     $stm = null;
-    header("Location: mypage.php");
+    header("Location: userpage.php?page_id=$pageid");
   } catch (PDOException $e) {
     //トランザクション取り消し（ロールバック）
     $pdo->rollBack();
