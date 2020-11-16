@@ -37,7 +37,7 @@ try {
   $user_array = $stm->fetch();
   $user_id = $user_array['id'];
   $user_name = $user_array['name'];
-  $user_email = $user_array['email'];
+  $user_email = $user_array['mail'];
 
   //データベース接続切断
   $stm = null;
@@ -48,7 +48,8 @@ try {
 ?>
 
 <?php
-if ($_SESSION['user_id'] == $user_email) {
+
+if ($_SESSION['user_mail'] === $user_email) {
   echo "<h1>マイページ</h1><a>ようこそ$user_name</a>さん";
 } else {
   echo "<h1><a>$user_name</a>さんのページです</h1>";
