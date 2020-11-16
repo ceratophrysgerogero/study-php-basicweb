@@ -1,7 +1,6 @@
 <?php
 include('../app/_parts/_header.php');
 session_start();
-$token = $_SESSION['token'];
 
 $title = '本登録';
 
@@ -70,6 +69,10 @@ if (empty($_GET)) {
  */
 if (isset($_POST['btn_confirm'])) {
 
+  //セッショントークン生成
+  $_SESSION['token'] = CsrfValidator::generate();
+  $token = $_SESSION['token'];
+
   //POSTされたデータを各変数に入れる
   $name = isset($_POST['name']) ? $_POST['name'] : NULL;
   $password = isset($_POST['password']) ? $_POST['password'] : NULL;
@@ -97,6 +100,9 @@ if (isset($_POST['btn_confirm'])) {
  * 登録(btn_submit)押した後の処理
  */
 if (isset($_POST['btn_submit'])) {
+
+  //csrf検出
+  CsrfValidator::validate($token);
 
   //パスワードのハッシュ化
   $password_hash =  password_hash($_SESSION['password'], PASSWORD_DEFAULT);
