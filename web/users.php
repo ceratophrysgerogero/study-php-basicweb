@@ -101,7 +101,7 @@ $data = $select->fetchAll(PDO::FETCH_ASSOC);
   <input type="text" name="search_input" placeholder="ユーザー検索" value="<?php if (!empty($_GET['search_input'])) {
                                                                         echo htmlspecialchars($_GET['search_input']);
                                                                       } ?>">
-  <input type="submit">
+  <input type="submit" value="検索">
 </form>
 
 <ul>
